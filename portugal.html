@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PORTUGAL — Cultural Presentation 2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,400&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red:    #CC0000;
+  --red-d:  #8B0000;
+  --red-l:  #FF4444;
+  --grn:    #006600;
+  --grn-l:  #00A550;
+  --blk:    #0D0D0D;
+  --blk2:   #181818;
+  --wht:    #FFFFFF;
+  --cream:  #F5EFE6;
+  --gold:   #C9A227;
+  --gray:   #888888;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: 'Montserrat', sans-serif;
+  user-select: none;
+}
+
+/* ── VIEWPORT / SCALE ──────────────────── */
+#viewport {
+  width: 100vw; height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: #000; overflow: hidden;
+}
+#pres {
+  width: 1920px; height: 1080px;
+  position: relative; overflow: hidden;
+  transform-origin: center center;
+}
+
+/* ── SLIDE BASE ────────────────────────── */
+.slide {
+  position: absolute; inset: 0;
+  width: 1920px; height: 1080px;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.05s;
+  overflow: hidden;
+}
+.slide.active { opacity: 1; visibility: visible; }
+
+/* ── TRANSITION OVERLAY ────────────────── */
+#overlay {
+  position: fixed; inset: 0;
+  background: var(--red);
+  z-index: 9999;
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+#overlay.anim {
+  animation: curtain 0.68s cubic-bezier(0.77, 0, 0.18, 1) forwards;
+}
+@keyframes curtain {
+  0%    { transform: scaleX(0); transform-origin: left center; }
+  48%   { transform: scaleX(1); transform-origin: left center; }
+  52%   { transform: scaleX(1); transform-origin: right center; }
+  100%  { transform: scaleX(0); transform-origin: right center; }
+}
+
+/* ── ANIMATION SYSTEM ──────────────────── */
+[data-anim]               { opacity: 0; }
+.slide.active [data-anim="up"]    { animation: aUp    0.75s ease forwards; }
+.slide.active [data-anim="left"]  { animation: aLeft  0.75s ease forwards; }
+.slide.active [data-anim="right"] { animation: aRight 0.75s ease forwards; }
+.slide.active [data-anim="fade"]  { animation: aFade  0.9s  ease forwards; }
+.slide.active [data-anim="scale"] { animation: aScale 0.75s ease forwards; }
+.slide.active [data-anim="line"]  { animation: aLine  0.8s  ease forwards; }
+
+.slide.active [data-d="1"] { animation-delay: 0.05s; }
+.slide.active [data-d="2"] { animation-delay: 0.18s; }
+.slide.active [data-d="3"] { animation-delay: 0.32s; }
+.slide.active [data-d="4"] { animation-delay: 0.46s; }
+.slide.active [data-d="5"] { animation-delay: 0.62s; }
+.slide.active [data-d="6"] { animation-delay: 0.78s; }
+.slide.active [data-d="7"] { animation-delay: 0.94s; }
+
+@keyframes aUp    { from { opacity:0; transform:translateY(48px); } to { opacity:1; transform:none; } }
+@keyframes aLeft  { from { opacity:0; transform:translateX(-56px); } to { opacity:1; transform:none; } }
+@keyframes aRight { from { opacity:0; transform:translateX(56px);  } to { opacity:1; transform:none; } }
+@keyframes aFade  { from { opacity:0; } to { opacity:1; } }
+@keyframes aScale { from { opacity:0; transform:scale(0.82); } to { opacity:1; transform:none; } }
+@keyframes aLine  { from { opacity:0; transform:scaleX(0); transform-origin:left; } to { opacity:1; transform:scaleX(1); } }
+
+/* ── NAV DOTS ──────────────────────────── */
+#nav-dots {
+  position: fixed; right: 38px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 12px;
+  z-index: 500;
+}
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.28);
+  cursor: pointer; border: none; padding: 0;
+  transition: all 0.3s;
+}
+.dot.on { background: var(--red); transform: scale(1.7); }
+
+/* ── NAV ARROWS ────────────────────────── */
+#nav-arrows {
+  position: fixed; bottom: 34px; right: 38px;
+  display: flex; gap: 8px; z-index: 500;
+}
+.nbtn {
+  width: 46px; height: 46px;
+  background: rgba(12,12,12,0.75);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff; cursor: pointer; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.25s; backdrop-filter: blur(8px);
+}
+.nbtn:hover { background: var(--red); border-color: var(--red); }
+
+/* ── SLIDE COUNTER ─────────────────────── */
+#slide-num {
+  position: fixed; bottom: 48px; left: 48px;
+  z-index: 500;
+  color: rgba(255,255,255,0.38);
+  font-size: 12px; letter-spacing: 4px; font-weight: 600;
+}
+
+/* ── PROGRESS BAR ──────────────────────── */
+#progress {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 3px; background: rgba(255,255,255,0.07);
+  z-index: 500;
+}
+#progress-fill {
+  height: 100%; background: var(--red);
+  transition: width 0.6s ease;
+}
+
+/* ============================================================
+   SLIDE 1 — TITLE
+============================================================ */
+#s1 {
+  display: grid;
+  grid-template-columns: 80px 1000px 1fr;
+  background: var(--blk);
+}
+.s1-flag {
+  background: linear-gradient(to right,
+    var(--grn) 0%, var(--grn) 38%,
+    var(--red) 38%, var(--red) 100%);
+  flex-shrink: 0;
+}
+.s1-left {
+  padding: 64px 52px 48px 60px;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  background: var(--blk);
+  position: relative; z-index: 2;
+}
+.s1-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--red); padding: 9px 20px;
+  width: fit-content;
+}
+.s1-badge-text {
+  color: var(--wht); font-size: 11px;
+  font-weight: 800; letter-spacing: 5px; text-transform: uppercase;
+}
+.s1-badge-sep { width: 6px; height: 6px; background: rgba(255,255,255,0.45); border-radius: 50%; }
+
+.s1-title-wrap {
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center; padding: 20px 0;
+}
+.s1-title {
+  font-family: 'Bebas Neue', display;
+  font-size: 196px; line-height: 0.86;
+  color: var(--wht); letter-spacing: -1px;
+  text-shadow: 10px 10px 0 rgba(255,255,255,0.04);
+}
+.s1-rule {
+  width: 110px; height: 3px;
+  background: var(--red); margin: 26px 0 18px;
+}
+.s1-sub {
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 6px; color: rgba(255,255,255,0.55);
+  text-transform: uppercase; margin-bottom: 14px;
+}
+.s1-kwrow { display: flex; flex-wrap: wrap; gap: 0; }
+.s1-kw {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 3px; color: rgba(255,255,255,0.28);
+  text-transform: uppercase;
+}
+.s1-kw + .s1-kw::before { content: ' · '; color: var(--red); margin: 0 8px; }
+
+.s1-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.s1-stat {
+  padding: 22px 18px;
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+.s1-stat:last-child { border-right: none; }
+.s1-stat-n {
+  font-family: 'Bebas Neue', display;
+  font-size: 44px; color: var(--wht); line-height: 1;
+}
+.s1-stat-n em { color: var(--red); font-style: normal; font-size: 30px; }
+.s1-stat-l {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 3px; color: rgba(255,255,255,0.35);
+  text-transform: uppercase; margin-top: 5px;
+}
+
+.s1-right {
+  position: relative; overflow: hidden;
+  display: grid; grid-template-rows: 1fr 300px;
+  gap: 4px; padding: 4px 4px 4px 0;
+  background: var(--blk);
+}
+.s1-img-main { position: relative; overflow: hidden; background: #2a1010; }
+.s1-img-main img, .s1-img-sm img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.s1-img-main::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(to right, rgba(13,13,13,0.85) 0%, transparent 35%),
+    linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%);
+}
+.s1-img-label {
+  position: absolute; bottom: 20px; left: 24px; z-index: 2;
+  font-size: 11px; font-weight: 800; letter-spacing: 4px;
+  color: rgba(255,255,255,0.85); text-transform: uppercase;
+}
+.s1-img-sublabel {
+  position: absolute; top: 20px; right: 24px; z-index: 2;
+  font-size: 10px; font-weight: 600; letter-spacing: 3px;
+  color: rgba(255,255,255,0.45); text-transform: uppercase;
+}
+.s1-img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.s1-img-sm { position: relative; overflow: hidden; background: #101a10; }
+.s1-img-sm:nth-child(2) { background: #1a1020; }
+.s1-img-sm::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);
+}
+
+/* ============================================================
+   SLIDE 2 — LOCATION
+============================================================ */
+#s2 {
+  display: grid;
+  grid-template-columns: 6px 920px 1fr;
+  background: var(--blk2);
+}
+.s2-accent { background: var(--red); }
+.s2-left {
+  padding: 72px 56px 64px 64px;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  background: var(--blk);
+  position: relative; overflow: hidden;
+}
+.s2-bg-text {
+  position: absolute;
+  font-family: 'Bebas Neue', display;
+  font-size: 240px; color: rgba(255,255,255,0.025);
+  letter-spacing: -6px; top: 50%; left: -10px;
+  transform: translateY(-50%); line-height: 1;
+  pointer-events: none; white-space: nowrap;
+}
+.s2-label {
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 6px; color: var(--red);
+  text-transform: uppercase; margin-bottom: 24px;
+}
+.s2-heading {
+  font-family: 'Bebas Neue', display;
+  font-size: 90px; color: var(--wht);
+  line-height: 0.88; letter-spacing: -1px; margin-bottom: 32px;
+}
+.s2-heading span { color: var(--grn-l); }
+.s2-rule { width: 80px; height: 2px; background: var(--red); margin-bottom: 36px; }
+.s2-tags { display: flex; flex-direction: column; gap: 16px; }
+.s2-tag { display: flex; align-items: center; gap: 16px; }
+.s2-tag-dot {
+  width: 8px; height: 8px; flex-shrink: 0;
+  border-radius: 50%; background: var(--red);
+}
+.s2-tag-text {
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 3px; color: rgba(255,255,255,0.72);
+  text-transform: uppercase;
+}
+.s2-coord {
+  font-family: 'Bebas Neue', display;
+  font-size: 22px; color: var(--red);
+  letter-spacing: 3px; margin-top: 34px;
+}
+
+.s2-right {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #0d1a0d, #0a1008);
+}
+.s2-map-img {
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1548707309-dcebeab9ea9b?auto=format&fit=crop&w=960&q=80');
+  background-size: cover; background-position: center;
+  opacity: 0.5;
+}
+.s2-map-overlay {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to right, var(--blk) 0%, transparent 30%),
+    linear-gradient(135deg, rgba(0,80,0,0.18) 0%, rgba(150,0,0,0.12) 100%);
+}
+.s2-country-label {
+  position: absolute; top: 56px; right: 60px;
+  font-family: 'Bebas Neue', display;
+  font-size: 56px; color: rgba(255,255,255,0.1);
+  letter-spacing: 10px;
+}
+.s2-coord-card {
+  position: absolute; right: 56px; bottom: 64px;
+  border: 1px solid rgba(255,255,255,0.14);
+  padding: 24px 32px;
+  background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
+}
+.s2-coord-card .label {
+  font-size: 10px; font-weight: 700; letter-spacing: 4px;
+  color: rgba(255,255,255,0.45); text-transform: uppercase; margin-bottom: 8px;
+}
+.s2-coord-card .val {
+  font-family: 'Bebas Neue', display;
+  font-size: 28px; color: var(--wht); letter-spacing: 2px;
+}
+.s2-info-cards {
+  position: absolute; left: 60px; bottom: 64px;
+  display: flex; gap: 16px;
+}
+.s2-info-card {
+  padding: 16px 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.5);
+}
+.s2-info-card .t {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px;
+  color: rgba(255,255,255,0.38); text-transform: uppercase; margin-bottom: 6px;
+}
+.s2-info-card .v {
+  font-family: 'Bebas Neue', display;
+  font-size: 20px; color: var(--red); letter-spacing: 1px;
+}
+.s2-bottom-strip {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(to right, var(--grn) 37%, var(--red) 37%);
+}
+
+/* ============================================================
+   SLIDE 3 — BRUNO FERNANDES
+============================================================ */
+#s3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--blk);
+}
+.s3-left {
+  background: linear-gradient(160deg, #0d0404 0%, #1a0808 50%, #250606 100%);
+  padding: 64px 56px;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+  border-right: 4px solid var(--red);
+}
+.s3-bg-num {
+  position: absolute;
+  font-family: 'Bebas Neue', display;
+  font-size: 480px; color: rgba(204,0,0,0.055);
+  line-height: 1; top: -60px; left: -30px;
+  pointer-events: none; letter-spacing: -15px;
+}
+.s3-section-label {
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 6px; color: rgba(255,255,255,0.38);
+  text-transform: uppercase; margin-bottom: 18px;
+}
+.s3-why {
+  font-family: 'Bebas Neue', display;
+  font-size: 48px; color: var(--red);
+  letter-spacing: 6px; margin-bottom: 8px; line-height: 1;
+}
+.s3-name {
+  font-family: 'Bebas Neue', display;
+  font-size: 120px; color: var(--wht);
+  line-height: 0.85; letter-spacing: -2px; margin-bottom: 24px;
+}
+.s3-rule { width: 80px; height: 3px; background: var(--red); margin-bottom: 26px; }
+.s3-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+.s3-tag {
+  padding: 8px 15px;
+  border: 1px solid rgba(255,255,255,0.18);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 3px; color: rgba(255,255,255,0.65);
+  text-transform: uppercase;
+}
+.s3-tag.red { background: var(--red); border-color: var(--red); color: var(--wht); }
+.s3-stat-row {
+  display: flex;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 26px;
+}
+.s3-stat { flex: 1; padding-right: 24px; border-right: 1px solid rgba(255,255,255,0.1); margin-right: 24px; }
+.s3-stat:last-child { border: none; margin: 0; padding: 0; }
+.s3-stat-n {
+  font-family: 'Bebas Neue', display;
+  font-size: 50px; color: var(--red); line-height: 1;
+}
+.s3-stat-l {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 3px; color: rgba(255,255,255,0.38);
+  text-transform: uppercase; margin-top: 4px;
+}
+
+.s3-right { position: relative; overflow: hidden; background: #0d0d1a; }
+.s3-img {
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=960&q=80');
+  background-size: cover; background-position: center top;
+}
+.s3-img-overlay {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to left, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.65) 100%),
+    linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.85) 100%);
+}
+.s3-record-badge {
+  position: absolute; top: 56px; right: 56px;
+  background: var(--red); padding: 22px 30px; text-align: center;
+  z-index: 2;
+}
+.s3-record-badge .big { font-family: 'Bebas Neue', display; font-size: 80px; color: var(--wht); line-height: 1; }
+.s3-record-badge .sm { font-size: 9px; font-weight: 800; letter-spacing: 3px; color: rgba(255,255,255,0.8); text-transform: uppercase; }
+.s3-season { position: absolute; bottom: 56px; right: 56px; text-align: right; z-index: 2; }
+.s3-season .big { font-family: 'Bebas Neue', display; font-size: 52px; color: var(--wht); line-height: 1; letter-spacing: 2px; }
+.s3-season .sm { font-size: 10px; font-weight: 700; letter-spacing: 4px; color: rgba(255,255,255,0.45); text-transform: uppercase; }
+.s3-origin {
+  position: absolute; bottom: 56px; left: 0; z-index: 2;
+  background: var(--grn); padding: 13px 26px;
+}
+.s3-origin span {
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 4px; color: var(--wht); text-transform: uppercase;
+}
+
+/* ============================================================
+   SLIDE 4 — HISTORICAL FUN FACT
+============================================================ */
+#s4 {
+  display: grid;
+  grid-template-columns: 760px 1fr;
+  background: var(--blk);
+}
+.s4-left { position: relative; overflow: hidden; background: linear-gradient(135deg, #1a1208, #2a1e08); }
+.s4-img {
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1580130775562-0ef92da028de?auto=format&fit=crop&w=960&q=80');
+  background-size: cover; background-position: center; opacity: 0.5;
+}
+.s4-img-overlay {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to right, rgba(13,13,13,0.25) 0%, rgba(13,13,13,0.75) 100%),
+    linear-gradient(to bottom, transparent 55%, rgba(0,0,0,0.92) 100%);
+}
+.s4-left-content {
+  position: relative; z-index: 2;
+  padding: 64px; height: 100%;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.s4-year-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 5px;
+  color: rgba(255,255,255,0.55); text-transform: uppercase; margin-bottom: 14px;
+}
+.s4-year {
+  font-family: 'Bebas Neue', display;
+  font-size: 196px; color: var(--red);
+  line-height: 0.84; letter-spacing: -5px;
+}
+.s4-img-caption {
+  font-size: 10px; font-weight: 700; letter-spacing: 4px;
+  color: rgba(255,255,255,0.3); text-transform: uppercase; margin-top: 12px;
+}
+
+.s4-right {
+  padding: 68px 60px;
+  background: var(--blk);
+  display: flex; flex-direction: column; justify-content: center;
+  border-left: 4px solid var(--red);
+}
+.s4-section-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 6px;
+  color: var(--red); text-transform: uppercase; margin-bottom: 20px;
+}
+.s4-heading {
+  font-family: 'Bebas Neue', display;
+  font-size: 88px; color: var(--wht);
+  line-height: 0.87; letter-spacing: -1px; margin-bottom: 28px;
+}
+.s4-heading span { color: var(--red); }
+.s4-rule { width: 80px; height: 3px; background: var(--red); margin-bottom: 32px; }
+.s4-facts { display: flex; flex-direction: column; gap: 18px; }
+.s4-fact { display: flex; align-items: flex-start; gap: 16px; }
+.s4-fact-icon {
+  width: 32px; height: 32px; flex-shrink: 0;
+  background: var(--red); display: flex;
+  align-items: center; justify-content: center; font-size: 15px;
+}
+.s4-fact-text {
+  font-size: 12px; font-weight: 700; letter-spacing: 3px;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+  line-height: 1.65; padding-top: 5px;
+}
+.s4-fact-text span { color: var(--wht); }
+.s4-bottom {
+  margin-top: 36px; padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+}
+.s4-bottom-tag {
+  flex: 1; padding: 14px 18px;
+  background: rgba(255,255,255,0.025);
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+.s4-bottom-tag:last-child { border: none; }
+.s4-bottom-tag .t {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px;
+  color: rgba(255,255,255,0.32); text-transform: uppercase; margin-bottom: 6px;
+}
+.s4-bottom-tag .v {
+  font-family: 'Bebas Neue', display;
+  font-size: 20px; color: var(--red); letter-spacing: 1px;
+}
+
+/* ============================================================
+   SLIDE 5 — MODERN FUN FACT
+============================================================ */
+#s5 {
+  background: var(--blk);
+}
+.s5-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, #001100 0%, #001408 40%, #0d0d0d 70%, #0d0000 100%);
+}
+.s5-grid-lines {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,165,80,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,165,80,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.s5-content {
+  position: relative; z-index: 2; height: 100%;
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+.s5-left {
+  padding: 72px 60px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.s5-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 6px;
+  color: var(--grn-l); text-transform: uppercase; margin-bottom: 20px;
+}
+.s5-number {
+  font-family: 'Bebas Neue', display;
+  font-size: 210px; color: var(--wht);
+  line-height: 0.8; letter-spacing: -5px; margin-bottom: 4px;
+}
+.s5-number span { color: var(--grn-l); }
+.s5-desc {
+  font-family: 'Bebas Neue', display;
+  font-size: 52px; color: rgba(255,255,255,0.65);
+  letter-spacing: 3px; line-height: 1.1; margin-bottom: 28px;
+}
+.s5-rule { width: 80px; height: 3px; background: var(--grn-l); margin-bottom: 26px; }
+.s5-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+.s5-tag {
+  padding: 8px 15px;
+  border: 1px solid rgba(0,165,80,0.32);
+  font-size: 10px; font-weight: 700; letter-spacing: 3px;
+  color: rgba(255,255,255,0.62); text-transform: uppercase;
+}
+
+.s5-right {
+  position: relative;
+  display: grid; grid-template-rows: 1fr 1fr;
+  padding: 4px 4px 4px 0; gap: 4px;
+}
+.s5-img-top {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #001a00, #002200);
+}
+.s5-img-top img, .s5-img-b img {
+  width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.65;
+}
+.s5-img-top::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,100,0,0.3) 0%, transparent 60%);
+}
+.s5-img-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.s5-img-b { position: relative; overflow: hidden; background: #0a1a0a; }
+.s5-img-b:nth-child(2) { background: #1a1a0a; }
+.s5-overlay-label {
+  position: absolute; top: 18px; left: 22px; z-index: 2;
+  font-size: 10px; font-weight: 700; letter-spacing: 3px;
+  color: var(--grn-l); text-transform: uppercase;
+}
+
+/* ============================================================
+   SLIDE 6 — CULTURAL TRADITION — FADO
+============================================================ */
+#s6 { background: #060606; }
+.s6-bg-img {
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1920&q=80');
+  background-size: cover; background-position: center;
+  filter: grayscale(30%) contrast(1.1);
+}
+.s6-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(6,6,6,0.97) 0%,
+    rgba(6,6,6,0.88) 30%,
+    rgba(6,6,6,0.52) 65%,
+    rgba(6,6,6,0.82) 100%
+  );
+}
+.s6-content {
+  position: relative; z-index: 2; height: 100%;
+  padding: 72px 80px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.s6-left { display: flex; flex-direction: column; }
+.s6-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 6px;
+  color: var(--red); text-transform: uppercase; margin-bottom: 20px;
+}
+.s6-title {
+  font-family: 'Bebas Neue', display;
+  font-size: 176px; color: var(--wht);
+  line-height: 0.84; letter-spacing: -2px; margin-bottom: 14px;
+}
+.s6-subtitle {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-size: 40px;
+  color: rgba(255,255,255,0.55); margin-bottom: 26px;
+}
+.s6-rule { width: 80px; height: 3px; background: var(--red); margin-bottom: 26px; }
+.s6-tags { display: flex; flex-direction: column; gap: 13px; }
+.s6-tag { display: flex; align-items: center; gap: 16px; }
+.s6-tag-bar { width: 3px; height: 20px; background: var(--red); flex-shrink: 0; }
+.s6-tag-text {
+  font-size: 12px; font-weight: 700; letter-spacing: 4px;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+
+.s6-right { display: flex; flex-direction: column; gap: 18px; }
+.s6-card {
+  padding: 26px 30px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.55); backdrop-filter: blur(8px);
+  position: relative;
+}
+.s6-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; width: 3px; height: 100%;
+  background: var(--red);
+}
+.s6-card-title {
+  font-size: 9px; font-weight: 800; letter-spacing: 4px;
+  color: var(--red); text-transform: uppercase; margin-bottom: 9px;
+}
+.s6-card-value {
+  font-family: 'Bebas Neue', display;
+  font-size: 30px; color: var(--wht); letter-spacing: 2px;
+}
+
+/* ============================================================
+   SLIDE 7 — FOOD — PASTEL DE NATA
+============================================================ */
+#s7 {
+  display: grid;
+  grid-template-columns: 1fr 760px;
+  background: var(--blk);
+}
+.s7-left {
+  padding: 60px 56px;
+  display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(160deg, #1a0800, #0d0800);
+  position: relative; overflow: hidden;
+  border-right: 4px solid var(--red);
+}
+.s7-bg-text {
+  position: absolute; bottom: -30px; right: -10px;
+  font-family: 'Bebas Neue', display;
+  font-size: 200px; color: rgba(255,255,255,0.022);
+  letter-spacing: -5px; line-height: 1;
+  pointer-events: none; white-space: nowrap;
+}
+.s7-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 6px;
+  color: var(--red); text-transform: uppercase; margin-bottom: 18px;
+}
+.s7-title {
+  font-family: 'Bebas Neue', display;
+  font-size: 104px; color: var(--wht);
+  line-height: 0.84; letter-spacing: -1px;
+}
+.s7-title-sub {
+  font-family: 'Bebas Neue', display;
+  font-size: 104px; color: var(--red);
+  line-height: 0.84; letter-spacing: -1px; margin-bottom: 28px;
+}
+.s7-rule { width: 80px; height: 3px; background: var(--red); margin-bottom: 28px; }
+.s7-timeline { display: flex; flex-direction: column; gap: 0; position: relative; }
+.s7-timeline::before {
+  content: ''; position: absolute;
+  left: 11px; top: 4px; bottom: 4px;
+  width: 2px; background: rgba(255,255,255,0.09);
+}
+.s7-event { display: flex; align-items: flex-start; gap: 18px; padding-bottom: 22px; }
+.s7-event:last-child { padding-bottom: 0; }
+.s7-dot {
+  width: 24px; height: 24px; flex-shrink: 0;
+  background: var(--red); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1; margin-top: 2px;
+}
+.s7-dot-inner { width: 8px; height: 8px; background: var(--wht); border-radius: 50%; }
+.s7-event-date {
+  font-family: 'Bebas Neue', display;
+  font-size: 26px; color: var(--red); letter-spacing: 2px; line-height: 1;
+}
+.s7-event-text {
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  color: rgba(255,255,255,0.62); text-transform: uppercase;
+}
+.s7-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.s7-tag {
+  padding: 7px 13px;
+  border: 1px solid rgba(204,0,0,0.28);
+  font-size: 10px; font-weight: 700; letter-spacing: 3px;
+  color: rgba(255,255,255,0.58); text-transform: uppercase;
+}
+
+.s7-right {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #1a0800, #2a1000);
+}
+.s7-img-main {
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1736981607609-47198378b462?auto=format&fit=crop&w=1400&q=80');
+  background-size: cover;
+  background-position: 65% 50%;
+}
+.s7-img-main::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(to left, rgba(0,0,0,0.1) 0%, rgba(26,8,0,0.65) 100%),
+    linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
+}
+.s7-img-label {
+  position: absolute; bottom: 32px; right: 28px; z-index: 2; text-align: right;
+}
+.s7-img-label .big { font-family: 'Bebas Neue', display; font-size: 44px; color: var(--wht); letter-spacing: 2px; line-height: 1; }
+.s7-img-label .sm { font-size: 10px; font-weight: 700; letter-spacing: 4px; color: rgba(255,255,255,0.45); text-transform: uppercase; }
+.s7-flag-strip {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 8px;
+  background: linear-gradient(to bottom, var(--grn) 37%, var(--red) 37%);
+}
+
+/* ============================================================
+   SLIDE 8 — THANK YOU / OBRIGADO
+============================================================ */
+#s8 {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--red);
+}
+.s8-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #990000 0%, #cc0000 50%, #aa0000 100%);
+}
+.s8-bg-pattern {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px,
+    transparent 1px, transparent 40px
+  );
+}
+.s8-green-l { position: absolute; left: 0; top: 0; bottom: 0; width: 110px; background: var(--grn); }
+.s8-green-r { position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: var(--grn); }
+.s8-year {
+  position: absolute; bottom: -30px; right: 130px;
+  font-family: 'Bebas Neue', display;
+  font-size: 220px; color: rgba(0,0,0,0.08); letter-spacing: -5px; line-height: 1;
+}
+.s8-content {
+  position: relative; z-index: 2; text-align: center; padding: 60px;
+  width: 100%;
+}
+.s8-label {
+  font-size: 12px; font-weight: 800; letter-spacing: 8px;
+  color: rgba(255,255,255,0.55); text-transform: uppercase; margin-bottom: 14px;
+}
+.s8-main {
+  font-family: 'Bebas Neue', display;
+  font-size: 260px; color: var(--wht);
+  line-height: 0.8; letter-spacing: -5px; margin-bottom: 6px;
+}
+.s8-sub {
+  font-family: 'Bebas Neue', display;
+  font-size: 72px; color: rgba(255,255,255,0.55);
+  letter-spacing: 22px; line-height: 1; margin-bottom: 44px;
+}
+.s8-rule { width: 100px; height: 3px; background: rgba(255,255,255,0.35); margin: 0 auto 38px; }
+.s8-tags { display: flex; gap: 0; justify-content: center; }
+.s8-tag {
+  padding: 10px 22px;
+  font-size: 11px; font-weight: 700; letter-spacing: 5px;
+  color: rgba(255,255,255,0.65); text-transform: uppercase;
+  border-left: 1px solid rgba(255,255,255,0.2);
+}
+.s8-tag:first-child { border-left: none; }
+.s8-flag-row {
+  position: absolute; bottom: 0; left: 110px; right: 80px;
+  height: 6px;
+  background: linear-gradient(to right,
+    var(--grn) 0%, var(--grn) 37%,
+    rgba(255,255,255,0.6) 37%, rgba(255,255,255,0.6) 39%,
+    var(--red) 39%);
+}
+</style>
+</head>
+<body>
+
+<div id="viewport">
+  <div id="pres">
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 1 — PORTUGAL TITLE
+    ══════════════════════════════════════════ -->
+    <div class="slide active" id="s1">
+      <div class="s1-flag"></div>
+      <div class="s1-left">
+        <div class="s1-badge" data-anim="left" data-d="1">
+          <span class="s1-badge-text">CULTURAL PRESENTATION</span>
+          <div class="s1-badge-sep"></div>
+          <span class="s1-badge-text">2025</span>
+        </div>
+        <div class="s1-title-wrap">
+          <div class="s1-title" data-anim="up" data-d="2">PORTUGAL</div>
+          <div class="s1-rule" data-anim="line" data-d="3"></div>
+          <div class="s1-sub" data-anim="up" data-d="3">REPÚBLICA PORTUGUESA</div>
+          <div class="s1-kwrow" data-anim="up" data-d="4">
+            <span class="s1-kw">HERITAGE</span>
+            <span class="s1-kw">ART</span>
+            <span class="s1-kw">GASTRONOMY</span>
+            <span class="s1-kw">FADO</span>
+            <span class="s1-kw">DISCOVERY</span>
+          </div>
+        </div>
+        <div class="s1-stats" data-anim="up" data-d="5">
+          <div class="s1-stat">
+            <div class="s1-stat-n">10<em>M+</em></div>
+            <div class="s1-stat-l">POPULATION</div>
+          </div>
+          <div class="s1-stat">
+            <div class="s1-stat-n">92<em>K km²</em></div>
+            <div class="s1-stat-l">TERRITORY</div>
+          </div>
+          <div class="s1-stat">
+            <div class="s1-stat-n">900<em>+</em></div>
+            <div class="s1-stat-l">YEARS OF HISTORY</div>
+          </div>
+        </div>
+      </div>
+      <div class="s1-right">
+        <div class="s1-img-main" data-anim="fade" data-d="1">
+          <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=1200&q=80" alt="Lisbon" onerror="this.style.display='none'">
+          <div class="s1-img-label">LISBON — CAPITAL</div>
+          <div class="s1-img-sublabel">ALFAMA · PORTUGAL</div>
+        </div>
+        <div class="s1-img-row">
+          <div class="s1-img-sm" data-anim="fade" data-d="3">
+            <img src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=600&q=80" alt="Sintra" onerror="this.style.display='none'">
+            <div class="s1-img-label">SINTRA</div>
+          </div>
+          <div class="s1-img-sm" data-anim="fade" data-d="4">
+            <img src="https://images.unsplash.com/photo-1587135941948-670b381f08ce?auto=format&fit=crop&w=600&q=80" alt="Porto" onerror="this.style.display='none'">
+            <div class="s1-img-label">PORTO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 2 — LOCATION
+    ══════════════════════════════════════════ -->
+    <div class="slide" id="s2">
+      <div class="s2-accent"></div>
+      <div class="s2-left">
+        <div class="s2-bg-text">LOC</div>
+        <div class="s2-label" data-anim="left" data-d="1">02 · LOCATION</div>
+        <div class="s2-heading" data-anim="up" data-d="2">SOUTH<br><span>WESTERN</span><br>EUROPE</div>
+        <div class="s2-rule" data-anim="line" data-d="3"></div>
+        <div class="s2-tags" data-anim="up" data-d="3">
+          <div class="s2-tag"><div class="s2-tag-dot"></div><span class="s2-tag-text">IBERIAN PENINSULA</span></div>
+          <div class="s2-tag"><div class="s2-tag-dot" style="background:var(--grn-l)"></div><span class="s2-tag-text">ATLANTIC COAST</span></div>
+          <div class="s2-tag"><div class="s2-tag-dot"></div><span class="s2-tag-text">BORDERS: SPAIN (EAST & NORTH)</span></div>
+          <div class="s2-tag"><div class="s2-tag-dot" style="background:rgba(255,255,255,0.28)"></div><span class="s2-tag-text">CAPITAL: LISBON</span></div>
+          <div class="s2-tag"><div class="s2-tag-dot" style="background:var(--grn)"></div><span class="s2-tag-text">AZORES + MADEIRA ISLANDS</span></div>
+        </div>
+        <div class="s2-coord" data-anim="up" data-d="5">38°43'N · 9°08'W</div>
+      </div>
+      <div class="s2-right">
+        <div class="s2-map-img"></div>
+        <div class="s2-map-overlay"></div>
+        <div class="s2-country-label" data-anim="fade" data-d="2">PORTUGAL</div>
+        <div class="s2-info-cards" data-anim="up" data-d="4">
+          <div class="s2-info-card"><div class="t">CONTINENT</div><div class="v">EUROPE</div></div>
+          <div class="s2-info-card"><div class="t">REGION</div><div class="v">IBERIAN PEN.</div></div>
+          <div class="s2-info-card"><div class="t">OCEAN</div><div class="v">ATLANTIC</div></div>
+        </div>
+        <div class="s2-coord-card" data-anim="right" data-d="5">
+          <div class="label">COORDINATES</div>
+          <div class="val">38°43'N · 9°08'W</div>
+        </div>
+        <div class="s2-bottom-strip"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 3 — WHY PORTUGAL · BRUNO FERNANDES
+    ══════════════════════════════════════════ -->
+    <div class="slide" id="s3">
+      <div class="s3-left">
+        <div class="s3-bg-num">1</div>
+        <div class="s3-section-label" data-anim="left" data-d="1">03 · WHY PORTUGAL?</div>
+        <div class="s3-why" data-anim="up" data-d="2">THE REASON</div>
+        <div class="s3-name" data-anim="up" data-d="2">BRUNO<br>FERNANDES</div>
+        <div class="s3-rule" data-anim="line" data-d="3"></div>
+        <div class="s3-tags" data-anim="up" data-d="3">
+          <span class="s3-tag red">PREMIER LEAGUE</span>
+          <span class="s3-tag">MOST ASSISTS</span>
+          <span class="s3-tag">SINGLE SEASON</span>
+          <span class="s3-tag">MANCHESTER UTD</span>
+          <span class="s3-tag">ATTACKING MIDFIELDER</span>
+          <span class="s3-tag red">PORTUGAL</span>
+        </div>
+        <div class="s3-stat-row" data-anim="up" data-d="5">
+          <div class="s3-stat">
+            <div class="s3-stat-n">#1</div>
+            <div class="s3-stat-l">PL ASSISTS RECORD</div>
+          </div>
+          <div class="s3-stat">
+            <div class="s3-stat-n">PL</div>
+            <div class="s3-stat-l">SINGLE SEASON</div>
+          </div>
+          <div class="s3-stat">
+            <div class="s3-stat-n">MU</div>
+            <div class="s3-stat-l">MANCHESTER UTD</div>
+          </div>
+        </div>
+      </div>
+      <div class="s3-right">
+        <div class="s3-img"></div>
+        <div class="s3-img-overlay"></div>
+        <div class="s3-record-badge" data-anim="scale" data-d="3">
+          <div class="big">RECORD</div>
+          <div class="sm">MOST ASSISTS</div>
+          <div class="sm">SINGLE SEASON</div>
+        </div>
+        <div class="s3-season" data-anim="up" data-d="4">
+          <div class="big">2024 / 25</div>
+          <div class="sm">PREMIER LEAGUE SEASON</div>
+        </div>
+        <div class="s3-origin" data-anim="left" data-d="5">
+          <span>BORN IN MAIA · PORTO · PORTUGAL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 4 — HISTORICAL FUN FACT
+    ══════════════════════════════════════════ -->
+    <div class="slide" id="s4">
+      <div class="s4-left">
+        <div class="s4-img"></div>
+        <div class="s4-img-overlay"></div>
+        <div class="s4-left-content">
+          <div class="s4-year-label" data-anim="up" data-d="2">THE YEAR THAT CHANGED THE WORLD</div>
+          <div class="s4-year" data-anim="up" data-d="2">1497</div>
+          <div class="s4-img-caption" data-anim="up" data-d="3">VASCO DA GAMA · CARAVEL · ATLANTIC</div>
+        </div>
+      </div>
+      <div class="s4-right">
+        <div class="s4-section-label" data-anim="left" data-d="1">04 · HISTORICAL FUN FACT</div>
+        <div class="s4-heading" data-anim="up" data-d="2">AGE OF<br><span>DISCOVERIES</span></div>
+        <div class="s4-rule" data-anim="line" data-d="3"></div>
+        <div class="s4-facts" data-anim="up" data-d="3">
+          <div class="s4-fact">
+            <div class="s4-fact-icon">⚓</div>
+            <div class="s4-fact-text"><span>VASCO DA GAMA</span> · FIRST SEA ROUTE TO INDIA</div>
+          </div>
+          <div class="s4-fact">
+            <div class="s4-fact-icon">🌍</div>
+            <div class="s4-fact-text"><span>FIRST GLOBAL EMPIRE</span> · SPANNING 4 CONTINENTS</div>
+          </div>
+          <div class="s4-fact">
+            <div class="s4-fact-icon">⛵</div>
+            <div class="s4-fact-text"><span>CARAVEL</span> · REVOLUTIONIZED OCEAN NAVIGATION</div>
+          </div>
+          <div class="s4-fact">
+            <div class="s4-fact-icon">📜</div>
+            <div class="s4-fact-text"><span>TREATY OF TORDESILLAS</span> · DIVIDED THE WORLD · 1494</div>
+          </div>
+        </div>
+        <div class="s4-bottom" data-anim="up" data-d="5">
+          <div class="s4-bottom-tag"><div class="t">NAVIGATOR</div><div class="v">VASCO DA GAMA</div></div>
+          <div class="s4-bottom-tag"><div class="t">VOYAGE</div><div class="v">1497 — 1499</div></div>
+          <div class="s4-bottom-tag"><div class="t">DESTINATION</div><div class="v">INDIA</div></div>
+          <div class="s4-bottom-tag"><div class="t">IMPACT</div><div class="v">GLOBAL TRADE</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 5 — MODERN FUN FACT
+    ══════════════════════════════════════════ -->
+    <div class="slide" id="s5">
+      <div class="s5-bg"></div>
+      <div class="s5-grid-lines"></div>
+      <div class="s5-content">
+        <div class="s5-left">
+          <div class="s5-label" data-anim="left" data-d="1">05 · MODERN FUN FACT</div>
+          <div class="s5-number" data-anim="up" data-d="2">100<span>%</span></div>
+          <div class="s5-desc" data-anim="up" data-d="3">RENEWABLE<br>ENERGY</div>
+          <div class="s5-rule" data-anim="line" data-d="3"></div>
+          <div class="s5-tags" data-anim="up" data-d="4">
+            <span class="s5-tag">6 CONSECUTIVE DAYS</span>
+            <span class="s5-tag">MARCH 2023</span>
+            <span class="s5-tag">WIND POWER</span>
+            <span class="s5-tag">SOLAR ENERGY</span>
+            <span class="s5-tag">HYDROELECTRIC</span>
+            <span class="s5-tag">CARBON NEUTRAL GOAL 2050</span>
+          </div>
+        </div>
+        <div class="s5-right">
+          <div class="s5-img-top" data-anim="fade" data-d="2">
+            <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=960&q=80" alt="Wind turbines" onerror="this.style.display='none'">
+            <div class="s5-overlay-label">WIND + SOLAR + HYDRO</div>
+          </div>
+          <div class="s5-img-bottom">
+            <div class="s5-img-b" data-anim="fade" data-d="4">
+              <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=480&q=80" alt="Solar panels" onerror="this.style.display='none'">
+            </div>
+            <div class="s5-img-b" data-anim="fade" data-d="5">
+              <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=480&q=80" alt="Renewable energy" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 6 — CULTURAL TRADITION · FADO
+    ══════════════════════════════════════════ -->
+    <div class="slide" id="s6">
+      <div class="s6-bg-img"></div>
+      <div class="s6-overlay"></div>
+      <div class="s6-content">
+        <div class="s6-left">
+          <div class="s6-label" data-anim="left" data-d="1">06 · CULTURAL TRADITION</div>
+          <div class="s6-title" data-anim="up" data-d="2">FADO</div>
+          <div class="s6-subtitle" data-anim="up" data-d="3">"Saudade"</div>
+          <div class="s6-rule" data-anim="line" data-d="3"></div>
+          <div class="s6-tags" data-anim="up" data-d="4">
+            <div class="s6-tag"><div class="s6-tag-bar"></div><span class="s6-tag-text">UNESCO INTANGIBLE HERITAGE · 2011</span></div>
+            <div class="s6-tag"><div class="s6-tag-bar"></div><span class="s6-tag-text">GUITARRA PORTUGUESA · 12 STRINGS</span></div>
+            <div class="s6-tag"><div class="s6-tag-bar"></div><span class="s6-tag-text">LISBON · COIMBRA</span></div>
+            <div class="s6-tag"><div class="s6-tag-bar"></div><span class="s6-tag-text">BORN IN 1820s · ALFAMA</span></div>
+            <div class="s6-tag"><div class="s6-tag-bar" style="background:var(--grn-l)"></div><span class="s6-tag-text">SOUL OF PORTUGAL</span></div>
+          </div>
+        </div>
+        <div class="s6-right">
+          <div class="s6-card" data-anim="right" data-d="2">
+            <div class="s6-card-title">MEANING</div>
+            <div class="s6-card-value">LONGING · NOSTALGIA · HEARTACHE</div>
+          </div>
+          <div class="s6-card" data-anim="right" data-d="3">
+            <div class="s6-card-title">ORIGIN</div>
+            <div class="s6-card-value">ALFAMA, LISBON · 1820s</div>
+          </div>
+          <div class="s6-card" data-anim="right" data-d="4">
+            <div class="s6-card-title">INSTRUMENT</div>
+            <div class="s6-card-value">GUITARRA PORTUGUESA · 12 STRINGS</div>
+          </div>
+          <div class="s6-card" data-anim="right" data-d="5">
+            <div class="s6-card-title">UNESCO STATUS</div>
+            <div class="s6-card-value">INTANGIBLE CULTURAL HERITAGE · 2011</div>
+          </div>
+          <div class="s6-card" data-anim="right" data-d="6">
+            <div class="s6-card-title">WHY IMPORTANT</div>
+            <div class="s6-card-value">IDENTITY · EMOTION · NATIONAL PRIDE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 7 — FOOD · PASTEL DE NATA
+    ══════════════════════════════════════════ -->
+    <div class="slide" id="s7">
+      <div class="s7-left">
+        <div class="s7-bg-text">NATA</div>
+        <div class="s7-label" data-anim="left" data-d="1">07 · CULTURAL FOOD</div>
+        <div class="s7-title" data-anim="up" data-d="2">PASTEL DE</div>
+        <div class="s7-title-sub" data-anim="up" data-d="2">NATA</div>
+        <div class="s7-rule" data-anim="line" data-d="3"></div>
+        <div class="s7-timeline" data-anim="up" data-d="3">
+          <div class="s7-event">
+            <div class="s7-dot"><div class="s7-dot-inner"></div></div>
+            <div>
+              <div class="s7-event-date">18TH C.</div>
+              <div class="s7-event-text">JERÓNIMOS MONASTERY · BELÉM · LISBON</div>
+            </div>
+          </div>
+          <div class="s7-event">
+            <div class="s7-dot"><div class="s7-dot-inner"></div></div>
+            <div>
+              <div class="s7-event-date">1837</div>
+              <div class="s7-event-text">FÁBRICA DE PASTÉIS DE BELÉM · OPENS TO PUBLIC</div>
+            </div>
+          </div>
+          <div class="s7-event">
+            <div class="s7-dot"><div class="s7-dot-inner"></div></div>
+            <div>
+              <div class="s7-event-date">TODAY</div>
+              <div class="s7-event-text">PORTUGUESE CULTURAL ICON · WORLDWIDE</div>
+            </div>
+          </div>
+        </div>
+        <div class="s7-tags" data-anim="up" data-d="5">
+          <span class="s7-tag">EGG CUSTARD TART</span>
+          <span class="s7-tag">FLAKY PASTRY</span>
+          <span class="s7-tag">CINNAMON + SUGAR</span>
+          <span class="s7-tag">BELÉM</span>
+          <span class="s7-tag">MONK RECIPE</span>
+        </div>
+      </div>
+      <div class="s7-right">
+        <div class="s7-img-main" data-anim="fade" data-d="1"></div>
+        <div class="s7-img-label" data-anim="up" data-d="4">
+          <div class="big">PASTEL DE NATA</div>
+          <div class="sm">BELÉM · LISBON · PORTUGAL</div>
+        </div>
+        <div class="s7-flag-strip"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 8 — THANK YOU / OBRIGADO
+    ══════════════════════════════════════════ -->
+    <div class="slide" id="s8">
+      <div class="s8-bg"></div>
+      <div class="s8-bg-pattern"></div>
+      <div class="s8-green-l"></div>
+      <div class="s8-green-r"></div>
+      <div class="s8-year">25</div>
+      <div class="s8-content">
+        <div class="s8-label" data-anim="up" data-d="1">CULTURAL PRESENTATION · 2025</div>
+        <div class="s8-main" data-anim="scale" data-d="2">OBRIGADO</div>
+        <div class="s8-sub" data-anim="up" data-d="3">THANK YOU</div>
+        <div class="s8-rule" data-anim="line" data-d="4"></div>
+        <div class="s8-tags" data-anim="up" data-d="5">
+          <span class="s8-tag">PORTUGAL</span>
+          <span class="s8-tag">CULTURAL PRESENTATION</span>
+          <span class="s8-tag">EUROPE</span>
+          <span class="s8-tag">2025</span>
+        </div>
+      </div>
+      <div class="s8-flag-row"></div>
+    </div>
+
+  </div><!-- #pres -->
+</div><!-- #viewport -->
+
+<!-- ── NAVIGATION UI ───────────────────── -->
+<div id="nav-dots">
+  <button class="dot on"  onclick="goTo(0)" title="01 Title"></button>
+  <button class="dot"     onclick="goTo(1)" title="02 Location"></button>
+  <button class="dot"     onclick="goTo(2)" title="03 Why Portugal"></button>
+  <button class="dot"     onclick="goTo(3)" title="04 Historical"></button>
+  <button class="dot"     onclick="goTo(4)" title="05 Modern"></button>
+  <button class="dot"     onclick="goTo(5)" title="06 Cultural Tradition"></button>
+  <button class="dot"     onclick="goTo(6)" title="07 Food"></button>
+  <button class="dot"     onclick="goTo(7)" title="08 Thank You"></button>
+</div>
+
+<div id="nav-arrows">
+  <button class="nbtn" onclick="prev()">&#8592;</button>
+  <button class="nbtn" onclick="next()">&#8594;</button>
+</div>
+
+<div id="slide-num">01 / 08</div>
+<div id="progress"><div id="progress-fill" style="width:12.5%"></div></div>
+<div id="overlay"></div>
+
+<script>
+const TOTAL = 8;
+let cur = 0;
+let busy = false;
+
+const slides = document.querySelectorAll('.slide');
+const dots   = document.querySelectorAll('.dot');
+const numEl  = document.getElementById('slide-num');
+const pfill  = document.getElementById('progress-fill');
+const overlay = document.getElementById('overlay');
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function updateUI(i) {
+  dots.forEach((d,idx) => d.classList.toggle('on', idx===i));
+  numEl.textContent = `${pad(i+1)} / ${pad(TOTAL)}`;
+  pfill.style.width = `${((i+1)/TOTAL)*100}%`;
+}
+
+function showSlide(i) {
+  slides[cur].classList.remove('active');
+  cur = i;
+  slides[cur].classList.add('active');
+  updateUI(cur);
+}
+
+function goTo(i) {
+  if (i===cur || busy) return;
+  busy = true;
+  overlay.classList.remove('anim');
+  void overlay.offsetWidth; // reflow
+  overlay.classList.add('anim');
+  setTimeout(()=>{ showSlide(i); },  330);
+  setTimeout(()=>{ busy = false; }, 720);
+}
+
+function next() { goTo((cur+1) % TOTAL); }
+function prev() { goTo((cur-1+TOTAL) % TOTAL); }
+
+// ── KEYBOARD ────────────────────────────
+document.addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); next(); }
+  if (['ArrowLeft','ArrowUp'].includes(e.key))         { e.preventDefault(); prev(); }
+});
+
+// ── SCALE TO FIT ─────────────────────────
+function fit() {
+  const s = Math.min(window.innerWidth/1920, window.innerHeight/1080);
+  document.getElementById('pres').style.transform = `scale(${s})`;
+}
+window.addEventListener('resize', fit);
+fit();
+
+// ── TOUCH SWIPE ──────────────────────────
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+document.addEventListener('touchend',   e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) dx<0 ? next() : prev();
+}, {passive:true});
+</script>
+</body>
+</html>
